@@ -1,0 +1,127 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Form</title>
+    <!-- Include Bootstrap CSS -->
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <div style="color:white;font-family:cursive;">
+</head>
+<body style="background-image: url('{% static 'images/city.jpeg' %}'); background-size: cover; background-position: center; background-repeat: ; margin: 0; padding: 0;">
+
+<nav class="navbar bg-body-tertiary">
+    <div class="container-fluid justify-content-between">
+        <a class="navbar-brand">Registration Form</a>
+        <!-- Add your logout button here -->
+        <button class="btn btn-outline-light">Logout</button>
+    </div>
+</nav>
+<div class="container mt-5">
+<form action="newregister" method="post">
+    {% csrf_token %}
+<form method="post" action="Login.html">
+    <i>Name:</i>
+    <input type="text" class="form-control" name="username" placeholder="Enter your name" ><br/><br/>
+    <i>Number:</i>
+    <input type="text" class="form-control" name="phone" placeholder="Enter 10-digit phone number" pattern="\d{10}" title="Please enter a 10-digit phone number" ><br/><br/>
+    <i>Email:</i>
+    <input type="email" class="form-control" name="email" placeholder="Enter your email" ><br/><br/>
+    <label><i>Date of Birth:</i></label>
+    <input type="date" class="form-control" id="dob" name="dob"></br></br>
+
+    <label for="age"><i>Age:</i></label>
+    <input type="text" class="form-control" id="age" name="age" readonly></br></br>
+    <div id="theGender">
+        <label for="theGender"><i>Gender:</i></label>
+        <input type="radio" name="gender" value="male"><a>Male</a>
+        <input type="radio" name="gender" value="female"><a>Female</a>
+        <input type="radio" name="gender" value="Others"><a>Others</a>
+    </div></br>
+    <i>Adress:</i><br/><textarea rows=5 class="form-control"></textarea><br/><br/>
+     <label for="department"><i>Department:</i></label>
+    <select id="department" name="department" onchange="populateCourses()">
+        <option value="">Select Department</option>
+        <option value="commerce">Commerce</option>
+        <option value="science">Science</option>
+        <!-- Add more department options as needed -->
+    </select><br/><br/>
+
+    <label for="course"><i>Course:</i></label>
+    <select id="course" name="course">
+        <option value="">Select Course</option>
+        <!-- Options will be dynamically added using JavaScript -->
+    </select><br/><br/>
+
+    <label for="purpose"><i>Purpose:</i></label>
+    <select id="purpose" name="purpose">
+        <option value="">Select Purpose</option>
+        <option value="enquiry">Enquiry</option>
+        <option value="place_order">Place Order</option>
+        <option value="return">Return</option>
+        <!-- Add more purpose options as needed -->
+    </select><br/><br/>
+
+    <label><i>Materials Provide:</i></label>
+    <input type="checkbox" name="notebook" id="notebook"> <label for="notebook">Notebook</label>
+    <input type="checkbox" name="pen" id="pen"> <label for="pen">Pen</label>
+    <input type="checkbox" name="paper" id="paper"> <label for="paper">Paper</label>
+    <!-- Add more checkbox options as needed -->
+
+    <br><br>
+
+<script>
+    function populateCourses() {
+        var departmentSelect = document.getElementById("department");
+        var courseSelect = document.getElementById("course");
+
+        // Clear previous options
+        courseSelect.innerHTML = "<option value=''>Select Course</option>";
+
+        // Add new options based on the selected department
+        if (departmentSelect.value === "commerce") {
+            addOption(courseSelect, "bba", "BBA");
+            addOption(courseSelect, "bcom", "B.Com");
+        } else if (departmentSelect.value === "science") {
+            addOption(courseSelect, "physics", "Physics");
+            addOption(courseSelect, "chemistry", "Chemistry");
+        }
+        // Add more conditions as needed
+    }
+
+    function addOption(selectElement, value, text) {
+        var option = document.createElement("option");
+        option.value = value;
+        option.text = text;
+        selectElement.add(option);
+    }
+  // Calculate age based on Date of Birth
+    document.getElementById("dob").addEventListener("change", function () {
+        var dob = new Date(this.value);
+        var today = new Date();
+        var age = today.getFullYear() - dob.getFullYear();
+
+        // Check if the birthday has occurred this year
+        if (today.getMonth() < dob.getMonth() || (today.getMonth() === dob.getMonth() && today.getDate() < dob.getDate())) {
+            age--;
+        }
+
+        document.getElementById("age").value = age;
+    });
+
+    // Auto-calculate age on page load
+    document.addEventListener("DOMContentLoaded", function () {
+        document.getElementById("dob").dispatchEvent(new Event("change"));
+    });
+
+</script>
+    <input type="submit"/><br/><br/>
+</form>
+{% for msg in messages %}
+    <marquee><h5><div style="color: {% if messages.tags == 'error' %}red{% elif messages.tags == 'info' %}white{% endif %};">{{msg}}</div></h5></marquee>
+    <a href="/">Go to Home</a>
+{% endfor %}
+</body>
+
+</html>
